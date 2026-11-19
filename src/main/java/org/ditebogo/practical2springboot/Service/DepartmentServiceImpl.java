@@ -1,0 +1,63 @@
+package org.ditebogo.practical2springboot.Service;
+
+import org.ditebogo.practical2springboot.DTO.DepartmentRequest;
+import org.ditebogo.practical2springboot.DTO.DepartmentResponse;
+import org.ditebogo.practical2springboot.Entity.Department;
+import org.ditebogo.practical2springboot.Exceptions.ResourceNotFoundException;
+import org.ditebogo.practical2springboot.Repository.DepartmentRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class DepartmentServiceImpl
+        implements DepartmentService {
+
+    private final DepartmentRepository repository;
+
+    public DepartmentServiceImpl(
+            DepartmentRepository repository) {
+        this.repository = repository;
+    }
+
+    @Override
+    public DepartmentResponse create(DepartmentRequest request) {
+
+        Department department = new Department(request.name(),request.description());
+
+        Department saved = repository.save(department);
+
+        return mapToResponse(saved);
+    }
+
+    @Override
+    public List<DepartmentResponse> findAll() {
+
+        return repository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    @Override
+    public DepartmentResponse findById(Long id) {
+
+        Department department = repository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Department not found: " + id
+                        ));
+
+        return mapToResponse(department);
+    }
+
+    private DepartmentResponse mapToResponse(
+            Department department) {
+
+        return new DepartmentResponse(
+                department.getId(),
+                department.getName(),
+                department.getDescription()
+        );
+    }
+}
