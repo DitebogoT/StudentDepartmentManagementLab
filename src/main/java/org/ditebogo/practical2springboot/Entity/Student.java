@@ -1,4 +1,4 @@
-package Entity;
+package org.ditebogo.practical2springboot.Entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package DTO;
+package org.ditebogo.practical2springboot.DTO;
 
 public record StudentResponse(
         Long id,
